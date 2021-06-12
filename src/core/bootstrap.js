@@ -1,12 +1,10 @@
 const browserFunc = require( '../config/browserFunc' );
-const Automation = require( './Automation' );
-
 const logger = require( '../config/logger' );
-
+const Automation = require( './Automation' );
 const initialStrap = require( './initialStrap' );
 
-async function bootstrap( name, runInitial = false, buttonPage = false, zoomOut = true ) {
-// Initializaing
+async function bootstrap( name, runInitial = false, zoomOut = false, buttonPage = false ) {
+  // Initializaing
   const browser = await browserFunc();
   const pages = await browser.pages();
   const page = pages[ 0 ];  
@@ -24,9 +22,8 @@ async function bootstrap( name, runInitial = false, buttonPage = false, zoomOut 
   const a = new Automation( page, name, 15000 );
 
   if ( runInitial ) {
-    const initialResult = await initialStrap( a, name, buttonPage, zoomOut );
+    await initialStrap( a, name, buttonPage, zoomOut );
   };
-
   return a;
 };
 
