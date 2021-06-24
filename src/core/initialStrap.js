@@ -22,7 +22,7 @@ async function navigateToHome( a, nav = false ) {
         'domcontentloaded' 
     ] } );
   };
-  await a.page.waitForTimeout( 1000 );
+  await a.page.waitForTimeout( 2500 );
 };
 
 async function runExec( logger, fileLocation ) {
