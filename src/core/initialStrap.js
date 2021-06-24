@@ -1,3 +1,5 @@
+const util = require( 'util' );
+const exec = util.promisify( require( 'child_process' ).exec );
 const cheerio = require( 'cheerio' );
 
 const createLogger = require( '../config/createLogger' );
@@ -23,19 +25,36 @@ async function navigateToHome( a, nav = false ) {
   await a.page.waitForTimeout( 1000 );
 };
 
-async function zoomingOut( a, toZoomOut ) {
-  if ( !toZoomOut ) return false;
-
-  logger.info( 'zoomOut Begin' );
-  await a.page.keyboard.down( 'Meta' );
-  await a.page.waitForTimeout( 500 );
-  await a.page.keyboard.press( 'Digit0' );
-  for ( i in [ ...Array( 3 ) ] ) {
-    await a.page.keyboard.press( 'Minus' );
-    await a.page.waitForTimeout( 500 );
+async function runExec( logger, fileLocation ) {
+  try {
+    const { stdout, stderr } = await exec( `open ${ fileLocation }` );
+    logger.info( 'stdout:', stdout );
+    logger.info( 'stderr:', stderr );
+  } catch ( err ) {
+    logger.error( err );
   };
-  await a.page.keyboard.up( 'Meta' );
-  logger.info( 'zoomOut End - any way to confirm?' );
+};
+
+async function zoomingOut( a, toZoomOut, logger, fileLocation ) {
+  if ( !toZoomOut ) return false;
+  logger.info( 'zoomOut Begin' );
+
+  // MacOS
+  await runExec( logger, fileLocation );
+
+  // possibly windows + linux
+  // await a.page.keyboard.down( 'Meta' );
+  // await a.page.waitForTimeout( 1500 );
+  // await a.page.keyboard.press( 'Digit0' );
+  // await a.page.waitForTimeout( 1500 );
+  // for ( i in [ ...Array( 3 ) ] ) {
+  //   await a.page.keyboard.press( 'Minus' );
+  //   await a.page.waitForTimeout( 1500 );
+  // };
+  // await a.page.keyboard.up( 'Meta' );
+
+  // logger.info( 'zoomOut End - any way to confirm?' );
+  await logger.info( 'zoomOut End - any way to confirm?' );
   return true;
 };
 
@@ -80,23 +99,21 @@ async function turnOffVideoReceiving( a ) {
   };
 };
 
-async function initialStrap( a, name, buttonPage = false, zoomOut = true ) {
+async function initialStrap( a, name, zoomOut = true, buttonPage = false ) {
   const logger = createLogger( `${ name }--initialStrap` );
 
   logger.info( '-- BEGINNING --' );
 
   // Optionally go to localhost or refresh
   await navigateToHome( a, process.env.NAV );
-  // Mac OS only. macOS 10.15, 11
-  // await a.page.goto( 'keysmith://run-macro/66B2FA0B-EC68-4546-A16B-97B105FB47F1' );
 
   // Attempt to zoom out with web automation. May not work if it was not coded before
-  await zoomingOut( a, zoomOut );
+  const fileLocation = './server/common/util/zoomOut.locally-signed.app';
+  await zoomingOut( a, zoomOut, logger,fileLocation );
 
   // await continueFromIntroFormPage( a, buttonPage );
 
   await dismissInitialOverlay( a );
-
   await turnOffVideoReceiving( a );
 };
 
