@@ -2,17 +2,25 @@ const cheerio = require( 'cheerio' );
 
 const createLogger = require( '../config/createLogger' );
 
-async function refreshPage( a ) {
-  if ( process.env.RELOAD ) {
-    await a.page.reload( { 
+async function navigateToHome( a, nav = false ) {
+  if ( !nav ) return false;
+
+  if ( nav == 'RELOAD' ) {
+    await a.page.reload( {
       waitUntil: [
         'networkidle0', 
         'load', 
         'domcontentloaded' 
     ] } );
-    await a.page.waitForTimeout( 1000 );
+  } else if ( nav == 'GOHOME' ) {
+    await a.page.goto( 'http://localhost/', { 
+      waitUntil: [ 
+        'networkidle0', 
+        'load', 
+        'domcontentloaded' 
+    ] } );
   };
-  return false;
+  await a.page.waitForTimeout( 1000 );
 };
 
 async function zoomingOut( a, toZoomOut ) {
@@ -77,9 +85,8 @@ async function initialStrap( a, name, buttonPage = false, zoomOut = true ) {
 
   logger.info( '-- BEGINNING --' );
 
-  // Optionally refresh when necessary
-  await refreshPage( a );
-
+  // Optionally go to localhost or refresh
+  await navigateToHome( a, process.env.NAV );
   // Mac OS only. macOS 10.15, 11
   // await a.page.goto( 'keysmith://run-macro/66B2FA0B-EC68-4546-A16B-97B105FB47F1' );
 

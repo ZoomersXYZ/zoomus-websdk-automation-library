@@ -7,7 +7,7 @@ async function bootstrap( name, runInitial = false, zoomOut = false, buttonPage 
   // Initializaing
   const browser = await browserFunc();
   const pages = await browser.pages();
-  const page = pages[ 0 ];  
+  const page = pages[ 0 ];
 
   // Initializaing values
   const TIMEOUT = 2500; // 5000 // 15000
@@ -22,7 +22,7 @@ async function bootstrap( name, runInitial = false, zoomOut = false, buttonPage 
   const a = new Automation( page, name, 15000 );
 
   if ( runInitial ) {
-    await initialStrap( a, name, buttonPage, zoomOut );
+    await initialStrap( a, name, zoomOut, buttonPage );
   };
   return a;
 };
