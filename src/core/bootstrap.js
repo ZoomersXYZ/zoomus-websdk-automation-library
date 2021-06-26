@@ -11,18 +11,17 @@ async function bootstrap( name, runInitial = false, zoomOut = false, buttonPage 
   const [ errPages, pages ] = await to( browser.pages() );
   const page = pages[ 0 ];
 
-  const width = 1920;
-  const widthFormula = width / 2;
-  // const heightFormula = width / ( 16 / 9 );
-  const heightFormula = widthFormula;
   // Initializaing values
+  const width = 1280;
+  const height = 1001;
+  // const heightFormula = width / ( 16 / 9 );
   const TIMEOUT = 2500; // 5000 15000
   let res;
   res = page.setDefaultTimeout( TIMEOUT );
   res = page.setDefaultNavigationTimeout( TIMEOUT * 3 );
   res = page.setViewport( { 
-    width: widthFormula, 
-    height: heightFormula 
+    width: width, 
+    height: height 
   } );
 
   logger.info( '-- bootstrapped --' );

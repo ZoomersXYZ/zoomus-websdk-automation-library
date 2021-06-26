@@ -86,7 +86,14 @@ async function dismissInitialOverlay( a ) {
 async function turnOffVideoReceiving( a ) {
   const parentSel = '#wc-footer div.more-button';
   const sel = parentSel + ' ul li a';
-  const videoReceivingHtml = await a.page.$eval( sel, e => e.outerHTML );
+  const videoReceivingHtml = await a.page.evaluate( ( sel ) => {
+    const elFound = document.querySelector( sel );
+    if ( elFound ) {
+      return elFound.outerHTML;
+    };
+
+    return '';
+  } );
   $ = cheerio.load( videoReceivingHtml );
   const videoText = $( 'a' ).text();
 
@@ -108,8 +115,8 @@ async function initialStrap( a, name, zoomOut = true, buttonPage = false ) {
   await navigateToHome( a, process.env.NAV );
 
   // Attempt to zoom out with web automation. May not work if it was not coded before
-  const fileLocation = './server/common/util/zoomOut.locally-signed.app';
-  await zoomingOut( a, zoomOut, logger,fileLocation );
+  const fileLocation = './server/common/util/zoomOut/zoomOut.locally-signed.app';
+  await zoomingOut( a, zoomOut, logger, fileLocation );
 
   // await continueFromIntroFormPage( a, buttonPage );
 
