@@ -4,7 +4,7 @@ use scripting additions
 activate application "Google Chrome Beta"
 delay 2
 tell application "System Events" to keystroke 0 using command down
-repeat 4 times
+repeat 3 times
 	delay 1.5
 	tell application "System Events" to keystroke "-" using command down
 end repeat

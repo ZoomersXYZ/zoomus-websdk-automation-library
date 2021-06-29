@@ -116,7 +116,7 @@ async function initialStrap( a, name, zoomOut = true, buttonPage = false ) {
 
   // Attempt to zoom out with web automation. May not work if it was not coded before
   const fileLocation = './server/common/util/zoomOut/zoomOut.locally-signed.app';
-  await zoomingOut( a, zoomOut, logger, fileLocation );
+  // await zoomingOut( a, zoomOut, logger, fileLocation );
 
   // await continueFromIntroFormPage( a, buttonPage );
 
