@@ -41,14 +41,21 @@ class Automation {
 
   // Returns boolean
   async isVisibleCommand( sel ) {
-    const [ err, result ] = await to( this.page.$eval( sel, ( elem ) => 
+    const [ err1, result1 ] = await to( this.page.$eval( sel, ( elem ) => 
       ( window.getComputedStyle( elem )
         .getPropertyValue( 'display' ) 
         !== 'none' )
         && 
         elem.offsetHeight
     ) );
-    return [ err, result ];
+
+    let res = false;
+    const [ err2, result2 ] = await to( this.page.$( sel ) );
+    if ( !err2 ) {
+      res = await result2.isIntersectingViewport();
+    };
+
+    return [ `err 1: ${ err }, err 2: ${ err2 }`, result1 && res ];
   };
 
   async innerCore( method, sel, pageBool, timeOut = this.TIMEOUT, options = undefined ) {

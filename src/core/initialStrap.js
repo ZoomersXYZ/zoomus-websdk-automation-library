@@ -86,14 +86,18 @@ async function dismissInitialOverlay( a ) {
 async function turnOffVideoReceiving( a ) {
   const parentSel = '#wc-footer div.more-button';
   const sel = parentSel + ' ul li a';
-  const videoReceivingHtml = await a.page.evaluate( ( sel ) => {
-    const elFound = document.querySelector( sel );
+  const videoReceivingHtml = await a.page.evaluate( ( selex ) => {
+    const elFound = document.querySelector( selex );
     if ( elFound ) {
       return elFound.outerHTML;
     };
+    return false;
+  }, sel );
 
-    return '';
-  } );
+  if ( !videoReceivingHtml ) {
+    return false;
+  };
+
   $ = cheerio.load( videoReceivingHtml );
   const videoText = $( 'a' ).text();
 
